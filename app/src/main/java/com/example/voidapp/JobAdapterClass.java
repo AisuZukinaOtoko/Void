@@ -19,13 +19,15 @@ import java.util.ArrayList;
     This entire class is from an online tutorial
  */
 public class JobAdapterClass extends RecyclerView.Adapter<JobAdapterClass.MyViewHolder> {
+    private final RecyclerInterface recyclerInterface;
     Context context;
     ArrayList<JobClass> jobList;
 
 
-    public JobAdapterClass(Context context, ArrayList<JobClass> jobList){
+    public JobAdapterClass(Context context, ArrayList<JobClass> jobList, RecyclerInterface recyclerInterface){
         this.context = context;
         this.jobList = jobList;
+        this.recyclerInterface = recyclerInterface;
     }
 
     @NonNull
@@ -33,7 +35,7 @@ public class JobAdapterClass extends RecyclerView.Adapter<JobAdapterClass.MyView
     public JobAdapterClass.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.recycler_row, parent, false);
-        return new JobAdapterClass.MyViewHolder(view);
+        return new JobAdapterClass.MyViewHolder(view, recyclerInterface);
     }
 
     @Override
@@ -54,13 +56,26 @@ public class JobAdapterClass extends RecyclerView.Adapter<JobAdapterClass.MyView
 
 
 
-        public MyViewHolder(@NonNull View itemView) {
+        public MyViewHolder(@NonNull View itemView, RecyclerInterface recyclerInterface) {
             super(itemView);
 
             image = itemView.findViewById(R.id.imgProfile);
             txtTitle = itemView.findViewById(R.id.txtJobTitle);
             txtLocation = itemView.findViewById(R.id.txtLocation);
             txtDescription = itemView.findViewById(R.id.txtDescription);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (recyclerInterface != null){
+                        int position = getAdapterPosition();
+
+                        if (position != RecyclerView.NO_POSITION){
+                            recyclerInterface.onServiceClick(position);
+                        }
+                    }
+                }
+            });
 
         }
     }
